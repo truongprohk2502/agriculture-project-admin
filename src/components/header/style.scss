@@ -1,0 +1,51 @@
+@import "../../assets/styles/vars.scss";
+
+.header {
+    padding: 0.4rem 0.6rem 0.4rem 0.6rem;
+    background-color: $header-background-color;
+    display: flex;
+    justify-content: space-between;
+    .homepage {
+        font-size: 1.5rem;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        &:hover {
+            color: #9c6e19;
+        }
+    }
+    .manage-container {
+        display: flex;
+        align-items: center;
+        .manage-button {
+            color: white;
+            background-color: rgb(102, 73, 73);
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+        .active {
+            background-color: red;
+        }
+    }
+    .avatar {
+        display: flex;
+        align-items: flex-end;
+        img {
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 1.2rem;
+            margin-right: 0.2rem;
+            cursor: pointer;
+        }
+        .logout {
+            padding: 0.1rem 0.3rem 0.1rem 0.3rem;
+            border: 1px solid black;
+            border-radius: 2.2rem;
+            border-color: black;
+            background-color: #76d4ff;
+            cursor: pointer;
+        }
+    }
+}
