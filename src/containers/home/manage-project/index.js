@@ -19,7 +19,6 @@ import {
   deleteSampleProject,
   putSampleProject,
 } from "../../../actions/project";
-import "./style.scss";
 import { Link } from "react-router-dom";
 
 class ManageProject extends Component {
@@ -291,6 +290,7 @@ class ManageProject extends Component {
           type="primary"
           className="add-btn"
           onClick={this.showAddProject}
+          style={{ margin: "10px" }}
         >
           Thêm mới dự án
         </Button>

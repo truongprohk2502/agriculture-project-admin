@@ -5,11 +5,20 @@ import {
   postPhase,
   putPhase,
 } from "../../../actions/phase";
-import "./style.scss";
 import { connect } from "react-redux";
-import { Popconfirm, Table, Button, Drawer, Input, Row, Select, notification } from "antd";
+import {
+  Popconfirm,
+  Table,
+  Button,
+  Drawer,
+  Input,
+  Row,
+  Select,
+  Form,
+  notification,
+  Col,
+} from "antd";
 import { Link } from "react-router-dom";
-import Form from "antd/lib/form/Form";
 
 class ManagePhaseScreen extends Component {
   constructor(props) {
@@ -22,7 +31,7 @@ class ManagePhaseScreen extends Component {
       description: "",
       estimatedTime: "",
       estimatedTimeUnit: "",
-      editId: ""
+      editId: "",
     };
   }
 
@@ -93,24 +102,17 @@ class ManagePhaseScreen extends Component {
   };
 
   editPhase = (id) => {
-    const phase = this.props.listPhase.find(
-        (phase) => phase._id === id
-      );
-      const {
-        name,
-        estimatedTime,
-        estimatedTimeUnit,
-        description,
-      } = phase;
-      this.setState({
-        name,
-        estimatedTime,
-        estimatedTimeUnit,
-        description,
-        editId: id,
-        showDrawer: true,
-        drawerType: "EDIT",
-      });
+    const phase = this.props.listPhase.find((phase) => phase._id === id);
+    const { name, estimatedTime, estimatedTimeUnit, description } = phase;
+    this.setState({
+      name,
+      estimatedTime,
+      estimatedTimeUnit,
+      description,
+      editId: id,
+      showDrawer: true,
+      drawerType: "EDIT",
+    });
   };
 
   deletePhase = (id) => {
@@ -142,20 +144,20 @@ class ManagePhaseScreen extends Component {
 
   handleEdit = () => {
     const {
-        editId,
-        name,
-        estimatedTime,
-        estimatedTimeUnit,
-        description,
-      } = this.state;
-      this.props.putPhase({
-        _id: editId,
-        name,
-        estimatedTime: Number(estimatedTime),
-        estimatedTimeUnit,
-        description,
-      });
-      this.openNotificationWithIcon("success");
+      editId,
+      name,
+      estimatedTime,
+      estimatedTimeUnit,
+      description,
+    } = this.state;
+    this.props.putPhase({
+      _id: editId,
+      name,
+      estimatedTime: Number(estimatedTime),
+      estimatedTimeUnit,
+      description,
+    });
+    this.openNotificationWithIcon("success");
   };
 
   render() {
@@ -170,7 +172,12 @@ class ManagePhaseScreen extends Component {
     } = this.state;
     return (
       <div>
-        <Button type="primary" className="add-btn" onClick={this.showAddPhase}>
+        <Button
+          type="primary"
+          className="add-btn"
+          onClick={this.showAddPhase}
+          style={{ margin: "10px" }}
+        >
           Thêm mới giai đoạn
         </Button>
         <Table
@@ -184,7 +191,7 @@ class ManagePhaseScreen extends Component {
           title={drawerType === "ADD" ? "Thêm mới giai đoạn" : "Sửa giai đoạn"}
           placement="right"
           closable={true}
-          width={300}
+          width={480}
           onClose={() => this.setState({ showDrawer: false })}
           visible={showDrawer}
         >
@@ -196,44 +203,65 @@ class ManagePhaseScreen extends Component {
             }
           >
             <Row gutter={16}>
-              <Input
-                placeholder="Nhập tên giai đoạn"
-                name="name"
-                value={name}
-                onChange={this.handleChangeText}
-              />
+              <Col span={24}>
+                <Form.Item name="name" label="Tên giai đoạn">
+                  {console.log(name)}
+                  <Input
+                    placeholder="Nhập tên giai đoạn"
+                    name="name"
+                    value={name}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
             <Row gutter={16}>
-              <Input.TextArea
-                rows={4}
-                placeholder="Nhập mô tả"
-                name="description"
-                value={description}
-                onChange={this.handleChangeText}
-              />
+              <Col span={24}>
+                <Form.Item name="description" label="Mô tả giai đoạn">
+                  {console.log(description)}
+                  <Input.TextArea
+                    rows={4}
+                    placeholder="Nhập mô tả"
+                    name="description"
+                    value={description}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
             <Row gutter={16}>
-              <Select
-                name="estimatedTimeUnit"
-                value={estimatedTimeUnit}
-                onChange={(value) =>
-                  this.setState({ estimatedTimeUnit: value })
-                }
-              >
-                <Select.Option value="">Chọn đơn vị thời gian</Select.Option>
-                <Select.Option value="Ngày">Ngày</Select.Option>
-                <Select.Option value="Tháng">Tháng</Select.Option>
-                <Select.Option value="Năm">Năm</Select.Option>
-              </Select>
+              <Col span={24}>
+                <Form.Item name="estimatedTimeUnit" label="Đơn vị thời gian">
+                  {console.log(estimatedTimeUnit)}
+                  <Select
+                    placeholder="Nhập đơn vị thời gian"
+                    name="estimatedTimeUnit"
+                    value={estimatedTimeUnit}
+                    onChange={(value) =>
+                      this.setState({ estimatedTimeUnit: value })
+                    }
+                  >
+                    <Select.Option value="Ngày">Ngày</Select.Option>
+                    <Select.Option value="Tháng">Tháng</Select.Option>
+                    <Select.Option value="Năm">Năm</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
             </Row>
-            <Row gutter={16} className="row">
-              <Input
-                type="number"
-                placeholder="Nhập thời gian dự toán"
-                name="estimatedTime"
-                value={estimatedTime}
-                onChange={this.handleChangeText}
-              />
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item name="estimatedTime" label="Thời gian dự toán">
+                  {console.log(estimatedTime)}
+                  <Input
+                    addonAfter={estimatedTimeUnit}
+                    type="number"
+                    placeholder="Nhập thời gian dự toán"
+                    name="estimatedTime"
+                    value={estimatedTime}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
             <Button type="primary" htmlType="submit">
               {drawerType === "ADD" ? "Thêm mới" : "Cập nhật"}

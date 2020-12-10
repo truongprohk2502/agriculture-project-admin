@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { deleteTask, getTask, postTask, putTask } from "../../../actions/task";
-import "./style.scss";
 import { connect } from "react-redux";
 import {
   Popconfirm,
@@ -9,12 +8,13 @@ import {
   Drawer,
   Input,
   Row,
+  Col,
+  Checkbox,
   Select,
+  Form,
   notification,
 } from "antd";
 import { Link } from "react-router-dom";
-import Form from "antd/lib/form/Form";
-import Checkbox from "antd/lib/checkbox/Checkbox";
 
 class ManageTaskScreen extends Component {
   constructor(props) {
@@ -232,7 +232,12 @@ class ManageTaskScreen extends Component {
     } = this.state;
     return (
       <div>
-        <Button type="primary" className="add-btn" onClick={this.showAddTask}>
+        <Button
+          type="primary"
+          className="add-btn"
+          onClick={this.showAddTask}
+          style={{ margin: "10px" }}
+        >
           Thêm mới công việc
         </Button>
         <Table
@@ -246,7 +251,7 @@ class ManageTaskScreen extends Component {
           title={drawerType === "ADD" ? "Thêm mới công việc" : "Sửa công việc"}
           placement="right"
           closable={true}
-          width={300}
+          width={480}
           onClose={() => this.setState({ showDrawer: false })}
           visible={showDrawer}
         >
@@ -258,74 +263,112 @@ class ManageTaskScreen extends Component {
             }
           >
             <Row gutter={16}>
-              <Input
-                placeholder="Nhập tên công việc"
-                name="name"
-                value={name}
-                onChange={this.handleChangeText}
-              />
+              <Col span={24}>
+                <Form.Item name="name" label="Tên giai đoạn">
+                  {console.log(name)}
+                  <Input
+                    placeholder="Nhập tên công việc"
+                    name="name"
+                    value={name}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
             <Row gutter={16}>
-              <Input.TextArea
-                rows={4}
-                placeholder="Nhập mô tả"
-                name="description"
-                value={description}
-                onChange={this.handleChangeText}
-              />
+              <Col span={24}>
+                <Form.Item name="name" label="Mô tả công việc">
+                  {console.log(description)}
+                  <Input.TextArea
+                    rows={4}
+                    placeholder="Nhập mô tả"
+                    name="description"
+                    value={description}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
             <Row gutter={16}>
-              <Select
-                name="estimatedTimeUnit"
-                value={estimatedTimeUnit}
-                onChange={(value) =>
-                  this.setState({ estimatedTimeUnit: value })
-                }
-              >
-                <Select.Option value="">Chọn đơn vị thời gian</Select.Option>
-                <Select.Option value="Ngày">Ngày</Select.Option>
-                <Select.Option value="Tháng">Tháng</Select.Option>
-                <Select.Option value="Năm">Năm</Select.Option>
-              </Select>
+              <Col span={24}>
+                <Form.Item name="estimatedTimeUnit" label="Đơn vị thời gian">
+                  {console.log(estimatedTimeUnit)}
+                  <Select
+                    placeholder="Nhập đơn vị thời gian"
+                    name="estimatedTimeUnit"
+                    value={estimatedTimeUnit}
+                    onChange={(value) =>
+                      this.setState({ estimatedTimeUnit: value })
+                    }
+                  >
+                    <Select.Option value="Ngày">Ngày</Select.Option>
+                    <Select.Option value="Tháng">Tháng</Select.Option>
+                    <Select.Option value="Năm">Năm</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
             </Row>
-            <Row gutter={16} className="row">
-              <Input
-                type="number"
-                placeholder="Nhập thời gian dự toán"
-                name="estimatedTime"
-                value={estimatedTime}
-                onChange={this.handleChangeText}
-              />
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item name="estimatedTime" label="Thời gian dự toán">
+                  {console.log(estimatedTime)}
+                  <Input
+                    addonAfter={estimatedTimeUnit}
+                    type="number"
+                    placeholder="Nhập thời gian dự toán"
+                    name="estimatedTime"
+                    value={estimatedTime}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
-            <Row gutter={16} className="row">
-              <Input
-                type="number"
-                placeholder="Nhập số lượng công nhân"
-                name="workerNum"
-                value={workerNum}
-                onChange={this.handleChangeText}
-              />
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item name="workerNum" label="Số lượng công nhân">
+                  {console.log(workerNum)}
+                  <Input
+                    type="number"
+                    placeholder="Nhập số lượng công nhân"
+                    name="workerNum"
+                    value={workerNum}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
-            <Row gutter={16} className="row">
-              <Input
-                type="number"
-                placeholder="Nhập lương mỗi công nhân"
-                name="workerUnitFee"
-                value={workerUnitFee}
-                onChange={this.handleChangeText}
-              />
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item name="workerUnitFee" label="Lương mỗi công nhân">
+                  {console.log(workerUnitFee)}
+                  <Input
+                    type="number"
+                    placeholder="Nhập lương mỗi công nhân"
+                    name="workerUnitFee"
+                    value={workerUnitFee}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
-            <Row gutter={16} className="row">
-              <Checkbox
-                checked={isDailyTask}
-                onChange={() =>
-                  this.setState({ isDailyTask: !this.state.isDailyTask })
-                }
-              >
-                Là công việc hằng ngày
-              </Checkbox>
+            <Row gutter={16}>
+              <Col span={24}>
+                {console.log(isDailyTask)}
+                <Checkbox
+                  checked={isDailyTask}
+                  onChange={() =>
+                    this.setState({ isDailyTask: !this.state.isDailyTask })
+                  }
+                >
+                  Là công việc hằng ngày
+                </Checkbox>
+              </Col>
             </Row>
-            <Button type="primary" htmlType="submit">
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginTop: "20px" }}
+            >
               {drawerType === "ADD" ? "Thêm mới" : "Cập nhật"}
             </Button>
           </Form>

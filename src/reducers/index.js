@@ -5,6 +5,7 @@ import phase from "./phase";
 import task from "./task";
 import material from "./material";
 import measurement from "./measurement";
+import user from "./user";
 
 const rootReducer = combineReducers({
   auth,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   phase,
   task,
   material,
-  measurement
+  measurement,
+  user
 });
 export default rootReducer;

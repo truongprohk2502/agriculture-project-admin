@@ -25,3 +25,5 @@ export const API_GET_MEASUREMENT = "/measurement/list";
 export const API_POST_MEASUREMENT = "/measurement/create";
 export const API_PUT_MEASUREMENT = "/measurement/update";
 export const API_DELETE_MEASUREMENT = "/measurement/delete";
+
+export const API_GET_LIST_USER = "/users/list";

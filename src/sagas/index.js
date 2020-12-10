@@ -5,6 +5,7 @@ import { actionMeasurement } from "./measurement";
 import { actionPhase } from "./phase";
 import { actionProject } from "./project";
 import { actionTask } from "./task";
+import { actionUser } from "./user";
 
 export default function* rootSaga() {
   yield all([
@@ -14,5 +15,6 @@ export default function* rootSaga() {
     actionTask(),
     actionMaterial(),
     actionMeasurement(),
+    actionUser()
   ]);
 }

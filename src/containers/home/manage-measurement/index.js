@@ -5,7 +5,6 @@ import {
   postMeasurement,
   putMeasurement,
 } from "../../../actions/measurement";
-import "./style.scss";
 import { connect } from "react-redux";
 import {
   Popconfirm,
@@ -14,10 +13,10 @@ import {
   Drawer,
   Input,
   Row,
+  Col,
+  Form,
   notification,
 } from "antd";
-import Form from "antd/lib/form/Form";
-import "./style.scss";
 
 class ManageMeasurementScreen extends Component {
   constructor(props) {
@@ -172,6 +171,7 @@ class ManageMeasurementScreen extends Component {
           type="primary"
           className="add-btn"
           onClick={this.showAddMeasurement}
+          style={{ margin: "10px" }}
         >
           Thêm mới số liệu đo đạc
         </Button>
@@ -183,10 +183,14 @@ class ManageMeasurementScreen extends Component {
           scroll={{ x: "max-content" }}
         />
         <Drawer
-          title={drawerType === "ADD" ? "Thêm mới số liệu đo đạc" : "Sửa số liệu đo đạc"}
+          title={
+            drawerType === "ADD"
+              ? "Thêm mới số liệu đo đạc"
+              : "Sửa số liệu đo đạc"
+          }
           placement="right"
           closable={true}
-          width={300}
+          width={480}
           onClose={() => this.setState({ showDrawer: false })}
           visible={showDrawer}
         >
@@ -198,37 +202,57 @@ class ManageMeasurementScreen extends Component {
             }
           >
             <Row gutter={16}>
-              <Input
-                placeholder="Nhập tên số liệu đo đạc"
-                name="name"
-                value={name}
-                onChange={this.handleChangeText}
-              />
+              <Col span={24}>
+                <Form.Item name="name" label="Số liệu đo đạc">
+                  {console.log(name)}
+                  <Input
+                    placeholder="Nhập tên số liệu đo đạc"
+                    name="name"
+                    value={name}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
             <Row gutter={16}>
-              <Input
-                placeholder="Nhập hướng dẫn đo"
-                name="guide"
-                value={guide}
-                onChange={this.handleChangeText}
-              />
-            </Row>
-            <Row gutter={16} className="row">
-              <Input
-                type="number"
-                placeholder="Nhập số liệu chuẩn"
-                name="standardNum"
-                value={standardNum}
-                onChange={this.handleChangeText}
-              />
+              <Col span={24}>
+                <Form.Item name="guide" label="Hướng dẫn đo">
+                  {console.log(guide)}
+                  <Input
+                    placeholder="Nhập hướng dẫn đo"
+                    name="guide"
+                    value={guide}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
             <Row gutter={16}>
-              <Input
-                placeholder="Nhập đơn vị đo"
-                name="unit"
-                value={unit}
-                onChange={this.handleChangeText}
-              />
+              <Col span={24}>
+                <Form.Item name="unit" label="Đơn vị đo">
+                  {console.log(unit)}
+                  <Input
+                    placeholder="Nhập đơn vị đo"
+                    name="unit"
+                    value={unit}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item name="standardNum" label="Số liệu chuẩn">
+                  {console.log(standardNum)}
+                  <Input
+                    addonAfter={unit}
+                    placeholder="Nhập số liệu chuẩn"
+                    name="standardNum"
+                    value={standardNum}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
             <Button type="primary" htmlType="submit">
               {drawerType === "ADD" ? "Thêm mới" : "Cập nhật"}

@@ -5,7 +5,6 @@ import {
   postMaterial,
   putMaterial,
 } from "../../../actions/material";
-import "./style.scss";
 import { connect } from "react-redux";
 import {
   Popconfirm,
@@ -14,10 +13,10 @@ import {
   Drawer,
   Input,
   Row,
+  Col,
+  Form,
   notification,
 } from "antd";
-import Form from "antd/lib/form/Form";
-import "./style.scss";
 
 class ManageMaterialScreen extends Component {
   constructor(props) {
@@ -172,6 +171,7 @@ class ManageMaterialScreen extends Component {
           type="primary"
           className="add-btn"
           onClick={this.showAddMaterial}
+          style={{ margin: "10px" }}
         >
           Thêm mới vật liệu
         </Button>
@@ -198,38 +198,59 @@ class ManageMaterialScreen extends Component {
             }
           >
             <Row gutter={16}>
-              <Input
-                placeholder="Nhập tên vật liệu"
-                name="name"
-                value={name}
-                onChange={this.handleChangeText}
-              />
+              <Col span={24}>
+                <Form.Item name="name" label="Tên vật liệu">
+                  {console.log(name)}
+                  <Input
+                    placeholder="Nhập tên vật liệu"
+                    name="name"
+                    value={name}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
             <Row gutter={16}>
-              <Input
-                placeholder="Nhập số lượng"
-                type="number"
-                name="quantity"
-                value={quantity}
-                onChange={this.handleChangeText}
-              />
+              <Col span={24}>
+                <Form.Item name="quantity" label="Số lượng">
+                  {console.log(quantity)}
+                  <Input
+                    placeholder="Nhập số lượng"
+                    type="number"
+                    name="quantity"
+                    value={quantity}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
             <Row gutter={16}>
-              <Input
-                placeholder="Nhập đơn vị vật liệu"
-                name="unit"
-                value={unit}
-                onChange={this.handleChangeText}
-              />
+              <Col span={24}>
+                <Form.Item name="unit" label="Đơn vị vật liệu">
+                  {console.log(unit)}
+                  <Input
+                    placeholder="Nhập đơn vị vật liệu"
+                    name="unit"
+                    value={unit}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
-            <Row gutter={16} className="row">
-              <Input
-                type="number"
-                placeholder="Nhập đơn giá"
-                name="unitPrice"
-                value={unitPrice}
-                onChange={this.handleChangeText}
-              />
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item name="unitPrice" label="Đơn giá vật liệu">
+                  {console.log(unitPrice)}
+                  <Input
+                    placeholder="Nhập đơn giá"
+                    addonAfter={unit}
+                    type="number"
+                    name="unitPrice"
+                    value={unitPrice}
+                    onChange={this.handleChangeText}
+                  />
+                </Form.Item>
+              </Col>
             </Row>
             <Button type="primary" htmlType="submit">
               {drawerType === "ADD" ? "Thêm mới" : "Cập nhật"}
