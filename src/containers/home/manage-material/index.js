@@ -30,29 +30,35 @@ class ManageMaterialScreen extends Component {
       unit: "",
       unitPrice: "",
       editId: "",
+      editable: true,
     };
   }
 
   componentDidMount() {
     this.props.getMaterial({ id: this.props.match.params.id_task });
-    this.setState({
-      columnData: [
-        {
-          title: "Tên vật liệu",
-          dataIndex: "name",
-        },
-        {
-          title: "Số lượng",
-          dataIndex: "quantity",
-        },
-        {
-          title: "Đơn vị vật liệu",
-          dataIndex: "unit",
-        },
-        {
-          title: "Đơn giá",
-          dataIndex: "unitPrice",
-        },
+    const editable = this.props.match?.params?.editable;
+    this.setState({ editable: editable === "1" });
+    let columnData = [
+      {
+        title: "Tên vật liệu",
+        dataIndex: "name",
+      },
+      {
+        title: "Số lượng",
+        dataIndex: "quantity",
+      },
+      {
+        title: "Đơn vị vật liệu",
+        dataIndex: "unit",
+      },
+      {
+        title: "Đơn giá",
+        dataIndex: "unitPrice",
+      },
+    ];
+    if (editable === "1") {
+      columnData = [
+        ...columnData,
         {
           title: "Sửa",
           render: ({ _id }) => (
@@ -72,7 +78,10 @@ class ManageMaterialScreen extends Component {
             </Popconfirm>
           ),
         },
-      ],
+      ];
+    }
+    this.setState({
+      columnData,
     });
   }
 
@@ -164,17 +173,22 @@ class ManageMaterialScreen extends Component {
       quantity,
       unit,
       unitPrice,
+      editable,
     } = this.state;
     return (
       <div>
-        <Button
-          type="primary"
-          className="add-btn"
-          onClick={this.showAddMaterial}
-          style={{ margin: "10px" }}
-        >
-          Thêm mới vật liệu
-        </Button>
+        {editable ? (
+          <Button
+            type="primary"
+            className="add-btn"
+            onClick={this.showAddMaterial}
+            style={{ margin: "10px" }}
+          >
+            Thêm mới vật liệu
+          </Button>
+        ) : (
+          <h1 style={{ marginLeft: 10 }}>Danh sách nguyên vật liệu</h1>
+        )}
         <Table
           dataSource={this.props.listMaterial}
           columns={columnData}

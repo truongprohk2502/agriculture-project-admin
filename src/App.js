@@ -5,6 +5,7 @@ import * as path from "./constants/routePath";
 import HomeScreen from "./containers/home";
 import LoginScreen from "./containers/login";
 import PrivateRoute from "./routes/privateRoute";
+import ManageProjectScreen from "./containers/home/manage-project";
 import ManagePhaseScreen from "./containers/home/manage-phase";
 import ManageTaskScreen from "./containers/home/manage-task";
 import ManageMaterialScreen from "./containers/home/manage-material";
@@ -48,19 +49,23 @@ class App extends Component {
               />
               <Route path={path.LOGIN_PAGE_PATH} component={LoginScreen} />
               <PrivateRoute
-                path="/phase/:id_project"
+                path="/project/:id_user"
+                component={ManageProjectScreen}
+              />
+              <PrivateRoute
+                path="/phase/:id_project/:editable"
                 component={ManagePhaseScreen}
               />
               <PrivateRoute
-                path="/task/:id_phase"
+                path="/task/:id_phase/:editable"
                 component={ManageTaskScreen}
               />
               <PrivateRoute
-                path="/material/:id_task"
+                path="/material/:id_task/:editable"
                 component={ManageMaterialScreen}
               />
               <PrivateRoute
-                path="/measurement/:id_task"
+                path="/measurement/:id_task/:editable"
                 component={ManageMeasurementScreen}
               />
             </Switch>

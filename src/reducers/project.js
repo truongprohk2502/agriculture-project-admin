@@ -10,13 +10,22 @@ const project = (state = initialState, action) => {
     case types.GET_SAMPLE_PROJECT:
       return state;
     case types.GET_SAMPLE_PROJECT_SUCCESS:
-      const sampleProjects = action.payload.data;
       return {
         ...state,
-        listSampleProject: sampleProjects,
+        listSampleProject: action.payload.data,
         error: null,
       };
     case types.GET_SAMPLE_PROJECT_FAIL:
+      return { ...state, error: action.payload.error };
+    case types.GET_ACTUAL_PROJECT:
+      return state;
+    case types.GET_ACTUAL_PROJECT_SUCCESS:
+      return {
+        ...state,
+        listSampleProject: action.payload.data,
+        error: null,
+      };
+    case types.GET_ACTUAL_PROJECT_FAIL:
       return { ...state, error: action.payload.error };
     case types.POST_SAMPLE_PROJECT:
       return state;
@@ -47,11 +56,26 @@ const project = (state = initialState, action) => {
           project.estimatedQuantity = editedProject.estimatedQuantity;
           project.unitPrice = editedProject.unitPrice;
           project.standardGap = editedProject.standardGap;
-          return project
+          return project;
         }),
         error: null,
       };
     case types.PUT_SAMPLE_PROJECT_FAIL:
+      return { ...state, error: action.payload.error };
+    case types.PUT_LOCK_PROJECT:
+      return state;
+    case types.PUT_LOCK_PROJECT_SUCCESS:
+      const lock_project = action.payload.data;
+      return {
+        ...state,
+        listSampleProject: state.listSampleProject.map((project) => {
+          if (project._id !== lock_project._id) return project;
+          project.isActive = lock_project.isActive;
+          return project;
+        }),
+        error: null,
+      };
+    case types.PUT_LOCK_PROJECT_FAIL:
       return { ...state, error: action.payload.error };
     case types.DELETE_SAMPLE_PROJECT:
       return state;

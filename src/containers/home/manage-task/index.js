@@ -31,54 +31,64 @@ class ManageTaskScreen extends Component {
       workerUnitFee: "",
       isDailyTask: false,
       editId: "",
+      editable: true,
     };
   }
 
   componentDidMount() {
     this.props.getTask({ id: this.props.match.params.id_phase });
-    this.setState({
-      columnData: [
-        {
-          title: "Tên công việc",
-          dataIndex: "name",
-        },
-        {
-          title: "Mô tả",
-          dataIndex: "description",
-          width: 500,
-        },
-        {
-          title: "Ghi chú",
-          dataIndex: "note",
-        },
-        {
-          title: "Thời gian dự toán",
-          dataIndex: "estimatedTime",
-        },
-        {
-          title: "Đơn vị thời gian",
-          dataIndex: "estimatedTimeUnit",
-        },
-        {
-          title: "Số lượng công nhân",
-          dataIndex: "workerNum",
-        },
-        {
-          title: "Tiền lương công nhân",
-          dataIndex: "workerUnitFee",
-        },
-        {
-          title: "Là công việc hằng ngày",
-          render: ({ isDailyTask }) => (isDailyTask ? "Có" : "Không"),
-        },
-        {
-          title: "Vật liệu",
-          render: ({ _id }) => <Link to={"/material/" + _id}>Vật liệu</Link>,
-        },
-        {
-          title: "Đo đạc",
-          render: ({ _id }) => <Link to={"/measurement/" + _id}>Đo đạc</Link>,
-        },
+    const editable = this.props.match?.params?.editable;
+    this.setState({ editable: editable === "1" });
+    let columnData = [
+      {
+        title: "Tên công việc",
+        dataIndex: "name",
+      },
+      {
+        title: "Mô tả",
+        dataIndex: "description",
+        width: 500,
+      },
+      {
+        title: "Ghi chú",
+        dataIndex: "note",
+      },
+      {
+        title: "Thời gian dự toán",
+        dataIndex: "estimatedTime",
+      },
+      {
+        title: "Đơn vị thời gian",
+        dataIndex: "estimatedTimeUnit",
+      },
+      {
+        title: "Số lượng công nhân",
+        dataIndex: "workerNum",
+      },
+      {
+        title: "Tiền lương công nhân",
+        dataIndex: "workerUnitFee",
+      },
+      {
+        title: "Là công việc hằng ngày",
+        render: ({ isDailyTask }) => (isDailyTask ? "Có" : "Không"),
+      },
+      {
+        title: "Vật liệu",
+        render: ({ _id }) => (
+          <Link to={"/material/" + _id + "/" + editable}>Vật liệu</Link>
+        ),
+      },
+      {
+        title: "Đo đạc",
+        render: ({ _id }) => (
+          <Link to={"/measurement/" + _id + "/" + editable}>Đo đạc</Link>
+        ),
+      },
+    ];
+    if (editable === "1") {
+      columnData = [
+        ...columnData,
         {
           title: "Sửa",
           render: ({ _id }) => <a onClick={() => this.editTask(_id)}>Sửa</a>,
@@ -96,7 +106,10 @@ class ManageTaskScreen extends Component {
             </Popconfirm>
           ),
         },
-      ],
+      ];
+    }
+    this.setState({
+      columnData,
     });
   }
 
@@ -229,17 +242,22 @@ class ManageTaskScreen extends Component {
       workerNum,
       workerUnitFee,
       isDailyTask,
+      editable,
     } = this.state;
     return (
       <div>
-        <Button
-          type="primary"
-          className="add-btn"
-          onClick={this.showAddTask}
-          style={{ margin: "10px" }}
-        >
-          Thêm mới công việc
-        </Button>
+        {editable ? (
+          <Button
+            type="primary"
+            className="add-btn"
+            onClick={this.showAddTask}
+            style={{ margin: "10px" }}
+          >
+            Thêm mới công việc
+          </Button>
+        ) : (
+          <h1 style={{ marginLeft: 10 }}>Danh sách công việc</h1>
+        )}
         <Table
           dataSource={this.props.listTask}
           columns={columnData}

@@ -26,3 +26,31 @@ export const getListUserFail = (error) => {
     },
   };
 };
+
+export const putLockUser = (data) => {
+  return {
+    type: types.PUT_LOCK_USER,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const putLockUserSuccess = (data) => {
+  return {
+    type: types.PUT_LOCK_USER_SUCCESS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const putLockUserFail = (error) => {
+  return {
+    type: types.PUT_LOCK_USER_FAIL,
+    payload: {
+      error,
+    },
+  };
+};
+

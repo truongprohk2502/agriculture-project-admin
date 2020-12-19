@@ -30,29 +30,35 @@ class ManageMeasurementScreen extends Component {
       standardNum: "",
       unit: "",
       editId: "",
+      editable: true,
     };
   }
 
   componentDidMount() {
     this.props.getMeasurement({ id: this.props.match.params.id_task });
-    this.setState({
-      columnData: [
-        {
-          title: "Tên số liệu đo đạc",
-          dataIndex: "name",
-        },
-        {
-          title: "Hướng dẫn đo",
-          dataIndex: "guide",
-        },
-        {
-          title: "Số liệu chuẩn",
-          dataIndex: "standardNum",
-        },
-        {
-          title: "Đơn vị đo",
-          dataIndex: "unit",
-        },
+    const editable = this.props.match?.params?.editable;
+    this.setState({ editable: editable === "1" });
+    let columnData = [
+      {
+        title: "Tên số liệu đo đạc",
+        dataIndex: "name",
+      },
+      {
+        title: "Hướng dẫn đo",
+        dataIndex: "guide",
+      },
+      {
+        title: "Số liệu chuẩn",
+        dataIndex: "standardNum",
+      },
+      {
+        title: "Đơn vị đo",
+        dataIndex: "unit",
+      },
+    ];
+    if (editable === "1") {
+      columnData = [
+        ...columnData,
         {
           title: "Sửa",
           render: ({ _id }) => (
@@ -72,7 +78,10 @@ class ManageMeasurementScreen extends Component {
             </Popconfirm>
           ),
         },
-      ],
+      ];
+    }
+    this.setState({
+      columnData,
     });
   }
 
@@ -164,17 +173,22 @@ class ManageMeasurementScreen extends Component {
       guide,
       standardNum,
       unit,
+      editable,
     } = this.state;
     return (
       <div>
-        <Button
-          type="primary"
-          className="add-btn"
-          onClick={this.showAddMeasurement}
-          style={{ margin: "10px" }}
-        >
-          Thêm mới số liệu đo đạc
-        </Button>
+        {editable ? (
+          <Button
+            type="primary"
+            className="add-btn"
+            onClick={this.showAddMeasurement}
+            style={{ margin: "10px" }}
+          >
+            Thêm mới số liệu đo đạc
+          </Button>
+        ) : (
+          <h1 style={{ marginLeft: 10 }}>Danh sách số liệu đo đạc</h1>
+        )}
         <Table
           dataSource={this.props.listMeasurement}
           columns={columnData}

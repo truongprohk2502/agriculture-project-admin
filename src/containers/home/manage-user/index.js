@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Popconfirm, Table } from "antd";
-import { getListUser } from "../../../actions/user";
+import { notification, Popconfirm, Table } from "antd";
+import { getListUser, putLockUser } from "../../../actions/user";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 class ManageUser extends Component {
   constructor(props) {
@@ -36,6 +37,10 @@ class ManageUser extends Component {
           render: ({ gender }) => (gender ? "Nam" : "Nữ"),
         },
         {
+          title: "Dự án",
+          render: ({ _id }) => <Link to={"/project/" + _id}>Xem dự án</Link>,
+        },
+        {
           title: "Hành động",
           render: ({ _id, isActive }) => (
             <Popconfirm
@@ -44,7 +49,7 @@ class ManageUser extends Component {
               } tài khoản？`}
               okText="Có"
               cancelText="Không"
-              onConfirm={() => this.actionUser(_id)}
+              onConfirm={() => this.actionUser(_id, !isActive)}
             >
               <a href="">{isActive ? "Khóa tài khoản" : "Mở tài khoản"}</a>
             </Popconfirm>
@@ -54,6 +59,18 @@ class ManageUser extends Component {
     });
     this.props.getListUser();
   }
+
+  openNotificationWithIcon = (type, lock) => {
+    notification[type]({
+      message: `${lock ? "Khóa" : "Mở"} tài khoản thành công!`,
+      description: `Tài khoản đã được ${lock ? "khóa" : "mở"} thành công!`,
+    });
+  };
+
+  actionUser = (id, isActive) => {
+    this.props.putLockUser({ id, isActive });
+    this.openNotificationWithIcon("success", !isActive);
+  };
 
   render() {
     return (
@@ -72,6 +89,7 @@ class ManageUser extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   getListUser: (data) => dispatch(getListUser(data)),
+  putLockUser: (data) => dispatch(putLockUser(data)),
 });
 
 const mapStateToProps = (state) => ({

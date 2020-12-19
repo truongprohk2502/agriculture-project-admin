@@ -28,6 +28,31 @@ export function* getSampleProject() {
   }
 }
 
+function getActualProjectApi(data) {
+  const response = Axios.get(
+    apiUrl.API_BACKEND +
+      apiUrl.API_GET_ACTUAL_PROJECT +
+      "/" +
+      data.payload.data.id
+  );
+  return response;
+}
+
+export function* getActualProject(dataBody) {
+  try {
+    const response = yield call(getActualProjectApi, dataBody);
+    const { data } = response;
+    if (data) {
+      yield put(projectAction.getActualProjectSuccess(data));
+    } else {
+      yield put(projectAction.getActualProjectFail(data));
+    }
+  } catch (error) {
+    console.log("Error loginUser", error);
+    yield put(projectAction.getActualProjectFail(error));
+  }
+}
+
 function postSampleProjectApi(data) {
   const response = Axios.post(
     apiUrl.API_BACKEND + apiUrl.API_POST_SAMPLE_PROJECT,
@@ -91,9 +116,29 @@ export function* putSampleProject(dataBody) {
   }
 }
 
+function putLockProjectApi(data) {
+  const response = Axios.put(
+    apiUrl.API_BACKEND + apiUrl.API_PUT_SAMPLE_PROJECT,
+    data.payload.data
+  );
+  return response;
+}
+
+export function* putLockProject(dataBody) {
+  try {
+    yield call(putLockProjectApi, dataBody);
+    yield put(projectAction.putLockProjectSuccess(dataBody.payload.data));
+  } catch (error) {
+    console.log("Error", error);
+    yield put(projectAction.putLockProjectFail(error));
+  }
+}
+
 export function* actionProject() {
   yield takeEvery(types.GET_SAMPLE_PROJECT, getSampleProject);
+  yield takeEvery(types.GET_ACTUAL_PROJECT, getActualProject);
   yield takeEvery(types.POST_SAMPLE_PROJECT, postSampleProject);
   yield takeEvery(types.DELETE_SAMPLE_PROJECT, deleteSampleProject);
   yield takeEvery(types.PUT_SAMPLE_PROJECT, putSampleProject);
+  yield takeEvery(types.PUT_LOCK_PROJECT, putLockProject);
 }

@@ -32,30 +32,38 @@ class ManagePhaseScreen extends Component {
       estimatedTime: "",
       estimatedTimeUnit: "",
       editId: "",
+      editable: true,
     };
   }
 
   componentDidMount() {
+    const editable = this.props.match?.params?.editable;
+    this.setState({ editable: editable === "1" });
     this.props.getPhase({ id: this.props.match.params.id_project });
-    this.setState({
-      columnData: [
-        {
-          title: "Tên giai đoạn",
-          dataIndex: "name",
-        },
-        {
-          title: "Mô tả",
-          dataIndex: "description",
-          width: 500,
-        },
-        {
-          title: "Thời gian dự toán",
-          dataIndex: "estimatedTime",
-        },
-        {
-          title: "Công việc",
-          render: ({ _id }) => <Link to={"/task/" + _id}>Công việc</Link>,
-        },
+    let columnData = [
+      {
+        title: "Tên giai đoạn",
+        dataIndex: "name",
+      },
+      {
+        title: "Mô tả",
+        dataIndex: "description",
+        width: 500,
+      },
+      {
+        title: "Thời gian dự toán",
+        dataIndex: "estimatedTime",
+      },
+      {
+        title: "Công việc",
+        render: ({ _id }) => (
+          <Link to={"/task/" + _id + "/" + editable}>Công việc</Link>
+        ),
+      },
+    ];
+    if (editable === "1") {
+      columnData = [
+        ...columnData,
         {
           title: "Sửa",
           render: ({ _id }) => <a onClick={() => this.editPhase(_id)}>Sửa</a>,
@@ -73,7 +81,10 @@ class ManagePhaseScreen extends Component {
             </Popconfirm>
           ),
         },
-      ],
+      ];
+    }
+    this.setState({
+      columnData,
     });
   }
 
@@ -169,17 +180,22 @@ class ManagePhaseScreen extends Component {
       description,
       estimatedTime,
       estimatedTimeUnit,
+      editable,
     } = this.state;
     return (
       <div>
-        <Button
-          type="primary"
-          className="add-btn"
-          onClick={this.showAddPhase}
-          style={{ margin: "10px" }}
-        >
-          Thêm mới giai đoạn
-        </Button>
+        {editable ? (
+          <Button
+            type="primary"
+            className="add-btn"
+            onClick={this.showAddPhase}
+            style={{ margin: "10px" }}
+          >
+            Thêm mới giai đoạn
+          </Button>
+        ) : (
+          <h1 style={{ marginLeft: 10 }}>Danh sách giai đoạn</h1>
+        )}
         <Table
           dataSource={this.props.listPhase}
           columns={columnData}

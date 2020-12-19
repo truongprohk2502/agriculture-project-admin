@@ -15,9 +15,11 @@ import {
 import { connect } from "react-redux";
 import {
   getSampleProject,
+  getActualProject,
   postSampleProject,
   deleteSampleProject,
   putSampleProject,
+  putLockProject,
 } from "../../../actions/project";
 import { Link } from "react-router-dom";
 
@@ -25,6 +27,7 @@ class ManageProject extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      screenType: "",
       showDrawer: false,
       drawerType: "ADD",
       columnData: [],
@@ -44,82 +47,117 @@ class ManageProject extends Component {
   }
 
   componentDidMount() {
+    const userId = this.props.match?.params?.id_user;
+    if (userId) {
+      this.props.getActualProject({ id: userId });
+      this.setState({ screenType: "ACTUAL" });
+    } else {
+      this.props.getSampleProject();
+      this.setState({ screenType: "SAMPLE" });
+    }
+    const columnData = [
+      {
+        title: "Tên dự án",
+        dataIndex: "name",
+      },
+      {
+        title: "Mô tả",
+        dataIndex: "description",
+        width: 500,
+      },
+      {
+        title: "Tiêu chuẩn",
+        render: (data) => data.standardGap.join(", "),
+      },
+      {
+        title: "Quy mô tối thiểu",
+        dataIndex: "minimalScale",
+      },
+      {
+        title: "Đơn vị chuẩn",
+        dataIndex: "standardUnit",
+      },
+      {
+        title: "Chi phí dự toán",
+        dataIndex: "estimatedCost",
+      },
+      {
+        title: "Đon vị thời gian",
+        dataIndex: "estimatedTimeUnit",
+      },
+      {
+        title: "Sản lượng dự toán",
+        dataIndex: "estimatedQuantity",
+      },
+      {
+        title: "Đơn giá",
+        dataIndex: "unitPrice",
+      },
+      {
+        title: "Hình ảnh",
+        render: ({ images }) => (
+          <a href="" onClick={() => this.showImages(images)}>
+            Hình ảnh
+          </a>
+        ),
+      },
+      {
+        title: "Giai đoạn",
+        render: ({ _id }) => (
+          <Link to={"/phase/" + _id + "/" + (userId ? "0" : "1")}>
+            Giai đoạn
+          </Link>
+        ),
+      },
+    ];
     this.setState({
-      columnData: [
-        {
-          title: "Tên dự án",
-          dataIndex: "name",
-        },
-        {
-          title: "Mô tả",
-          dataIndex: "description",
-          width: 500,
-        },
-        {
-          title: "Tiêu chuẩn",
-          render: (data) => data.standardGap.join(", "),
-        },
-        {
-          title: "Quy mô tối thiểu",
-          dataIndex: "minimalScale",
-        },
-        {
-          title: "Đơn vị chuẩn",
-          dataIndex: "standardUnit",
-        },
-        {
-          title: "Chi phí dự toán",
-          dataIndex: "estimatedCost",
-        },
-        {
-          title: "Đon vị thời gian",
-          dataIndex: "estimatedTimeUnit",
-        },
-        {
-          title: "Sản lượng dự toán",
-          dataIndex: "estimatedQuantity",
-        },
-        {
-          title: "Đơn giá",
-          dataIndex: "unitPrice",
-        },
-        {
-          title: "Hình ảnh",
-          render: ({ images }) => (
-            <a href="" onClick={() => this.showImages(images)}>
-              Hình ảnh
-            </a>
-          ),
-        },
-        {
-          title: "Giai đoạn",
-          render: ({ _id }) => <Link to={"/phase/" + _id}>Giai đoạn</Link>,
-        },
-        {
-          title: "Sửa",
-          render: ({ _id }) => <a onClick={() => this.editProject(_id)}>Sửa</a>,
-        },
-        {
-          title: "Xóa",
-          render: ({ _id }) => (
-            <Popconfirm
-              title="Bạn có chắc chắn muốn xóa？"
-              okText="Có"
-              cancelText="Không"
-              onConfirm={() => this.deleteProject(_id)}
-            >
-              <a href="">Xóa</a>
-            </Popconfirm>
-          ),
-        },
-      ],
+      columnData: userId
+        ? [
+            ...columnData,
+            {
+              title: "Hành động",
+              render: ({ _id, isActive }) => (
+                <Popconfirm
+                  title="Bạn có chắc chắn？"
+                  okText="Có"
+                  cancelText="Không"
+                  onConfirm={() => this.lockProject(_id, !isActive)}
+                >
+                  <a href="">{isActive ? "Khóa" : "Mở"}</a>
+                </Popconfirm>
+              ),
+            },
+          ]
+        : [
+            ...columnData,
+            {
+              title: "Sửa",
+              render: ({ _id }) => (
+                <a onClick={() => this.editProject(_id)}>Sửa</a>
+              ),
+            },
+            {
+              title: "Xóa",
+              render: ({ _id }) => (
+                <Popconfirm
+                  title="Bạn có chắc chắn muốn xóa？"
+                  okText="Có"
+                  cancelText="Không"
+                  onConfirm={() => this.deleteProject(_id)}
+                >
+                  <a href="">Xóa</a>
+                </Popconfirm>
+              ),
+            },
+          ],
     });
-    this.props.getSampleProject();
   }
 
-  goToPhaseScreen = (e, projectId) => {
-    e.preventDefault();
-    this.props.history.push("/phase/" + projectId);
+  lockProject = (_id, isActive) => {
+    this.props.putLockProject({ _id, isActive });
+    notification["success"]({
+      message: `${isActive ? "Mở" : "Khóa"} dự án thành công`,
+    });
   };
 
   openNotificationWithIcon = (type) => {
@@ -283,17 +321,22 @@ class ManageProject extends Component {
       drawerType,
       columnData,
       showDrawer,
+      screenType,
     } = this.state;
     return (
       <div>
-        <Button
-          type="primary"
-          className="add-btn"
-          onClick={this.showAddProject}
-          style={{ margin: "10px" }}
-        >
-          Thêm mới dự án
-        </Button>
+        {screenType === "SAMPLE" ? (
+          <Button
+            type="primary"
+            className="add-btn"
+            onClick={this.showAddProject}
+            style={{ margin: "10px" }}
+          >
+            Thêm mới dự án
+          </Button>
+        ) : (
+          <h1 style={{ marginLeft: 10 }}>Danh sách dự án</h1>
+        )}
         <Table
           dataSource={this.props.listSampleProject}
           columns={columnData}
@@ -507,9 +550,11 @@ class ManageProject extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   getSampleProject: () => dispatch(getSampleProject()),
+  getActualProject: (data) => dispatch(getActualProject(data)),
   postSampleProject: (data) => dispatch(postSampleProject(data)),
   deleteSampleProject: (data) => dispatch(deleteSampleProject(data)),
   putSampleProject: (data) => dispatch(putSampleProject(data)),
+  putLockProject: (data) => dispatch(putLockProject(data)),
 });
 
 const mapStateToProps = (state) => ({

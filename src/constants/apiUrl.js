@@ -2,6 +2,7 @@ export const API_BACKEND = "http://localhost:3000";
 export const API_LOGIN_USERNAME = "/auth/signin";
 
 export const API_GET_SAMPLE_PROJECT = "/project/list";
+export const API_GET_ACTUAL_PROJECT = "/project/listByUserId";
 export const API_POST_SAMPLE_PROJECT = "/project/createSampleProject";
 export const API_PUT_SAMPLE_PROJECT = "/project/update";
 export const API_DELETE_SAMPLE_PROJECT = "/project/delete";
@@ -27,3 +28,4 @@ export const API_PUT_MEASUREMENT = "/measurement/update";
 export const API_DELETE_MEASUREMENT = "/measurement/delete";
 
 export const API_GET_LIST_USER = "/users/list";
+export const API_PUT_LOCK_USER = "/users/lock";

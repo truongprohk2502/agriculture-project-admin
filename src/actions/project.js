@@ -27,6 +27,33 @@ export const getSampleProjectFail = (error) => {
   };
 };
 
+export const getActualProject = (data) => {
+  return {
+    type: types.GET_ACTUAL_PROJECT,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const getActualProjectSuccess = (data) => {
+  return {
+    type: types.GET_ACTUAL_PROJECT_SUCCESS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const getActualProjectFail = (error) => {
+  return {
+    type: types.GET_ACTUAL_PROJECT_FAIL,
+    payload: {
+      error,
+    },
+  };
+};
+
 export const postSampleProject = (data) => {
   return {
     type: types.POST_SAMPLE_PROJECT,
@@ -102,6 +129,33 @@ export const putSampleProjectSuccess = (data) => {
 export const putSampleProjectFail = (error) => {
   return {
     type: types.PUT_SAMPLE_PROJECT_FAIL,
+    payload: {
+      error,
+    },
+  };
+};
+
+export const putLockProject = (data) => {
+  return {
+    type: types.PUT_LOCK_PROJECT,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const putLockProjectSuccess = (data) => {
+  return {
+    type: types.PUT_LOCK_PROJECT_SUCCESS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const putLockProjectFail = (error) => {
+  return {
+    type: types.PUT_LOCK_PROJECT_FAIL,
     payload: {
       error,
     },
