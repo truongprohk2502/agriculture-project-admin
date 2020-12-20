@@ -8,7 +8,7 @@ function getSampleProjectApi() {
   const response = Axios.get(
     apiUrl.API_BACKEND +
       apiUrl.API_GET_SAMPLE_PROJECT +
-      "?page=0&size=100&is_active=true"
+      "?page=0&size=100&all=true"
   );
   return response;
 }
@@ -134,6 +134,59 @@ export function* putLockProject(dataBody) {
   }
 }
 
+function postImageProjectApi(dataBody) {
+  const data = new FormData();
+  data.append("files", dataBody.payload.data.file);
+  data.append("projectId", dataBody.payload.data.projectId);
+  const response = Axios.post(
+    apiUrl.API_BACKEND + apiUrl.API_POST_IMAGE_PROJECT,
+    data,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response;
+}
+
+export function* postImageProject(dataBody) {
+  try {
+    const response = yield call(postImageProjectApi, dataBody);
+    yield put(
+      projectAction.postImageProjectSuccess({
+        images: response.data.images,
+        projectId: dataBody.payload.data.projectId,
+      })
+    );
+  } catch (error) {
+    console.log("Error", error);
+    yield put(projectAction.postImageProjectFail(error));
+  }
+}
+
+function putApiImageProject(data) {
+  console.log(data.payload)
+  const response = Axios.put(
+    apiUrl.API_BACKEND +
+      apiUrl.API_PUT_IMAGE_PROJECT +
+      "/" +
+      data.payload.data.projectId,
+    data.payload.data.images
+  );
+  return response;
+}
+
+export function* putImageProject(dataBody) {
+  try {
+    yield call(putApiImageProject, dataBody);
+    yield put(projectAction.putImageProjectSuccess(dataBody.payload.data));
+  } catch (error) {
+    console.log("Error", error);
+    yield put(projectAction.putImageProjectFail(error));
+  }
+}
+
 export function* actionProject() {
   yield takeEvery(types.GET_SAMPLE_PROJECT, getSampleProject);
   yield takeEvery(types.GET_ACTUAL_PROJECT, getActualProject);
@@ -141,4 +194,6 @@ export function* actionProject() {
   yield takeEvery(types.DELETE_SAMPLE_PROJECT, deleteSampleProject);
   yield takeEvery(types.PUT_SAMPLE_PROJECT, putSampleProject);
   yield takeEvery(types.PUT_LOCK_PROJECT, putLockProject);
+  yield takeEvery(types.POST_IMAGE_PROJECT, postImageProject);
+  yield takeEvery(types.PUT_IMAGE_PROJECT, putImageProject);
 }

@@ -51,10 +51,7 @@ export function* postTask(dataBody) {
 
 function deleteTaskApi(data) {
   const response = Axios.delete(
-    apiUrl.API_BACKEND +
-      apiUrl.API_DELETE_TASK +
-      "/" +
-      data.payload.data.id
+    apiUrl.API_BACKEND + apiUrl.API_DELETE_TASK + "/" + data.payload.data.id
   );
   return response;
 }
@@ -87,9 +84,63 @@ export function* putTask(dataBody) {
   }
 }
 
+function postImageTaskApi(dataBody) {
+  const data = new FormData();
+  data.append("files", dataBody.payload.data.file);
+  data.append("taskId", dataBody.payload.data.taskId);
+  const response = Axios.post(
+    apiUrl.API_BACKEND + apiUrl.API_POST_IMAGE_TASK,
+    data,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response;
+}
+
+export function* postImageTask(dataBody) {
+  try {
+    const response = yield call(postImageTaskApi, dataBody);
+    yield put(
+      taskAction.postImageTaskSuccess({
+        images: response.data.images,
+        taskId: dataBody.payload.data.taskId,
+      })
+    );
+  } catch (error) {
+    console.log("Error", error);
+    yield put(taskAction.postImageTaskFail(error));
+  }
+}
+
+function putApiImageTask(data) {
+  const response = Axios.put(
+    apiUrl.API_BACKEND +
+      apiUrl.API_PUT_IMAGE_TASK +
+      "/" +
+      data.payload.data.taskId,
+    data.payload.data.images
+  );
+  return response;
+}
+
+export function* putImageTask(dataBody) {
+  try {
+    yield call(putApiImageTask, dataBody);
+    yield put(taskAction.putImageTaskSuccess(dataBody.payload.data));
+  } catch (error) {
+    console.log("Error", error);
+    yield put(taskAction.putImageTaskFail(error));
+  }
+}
+
 export function* actionTask() {
   yield takeEvery(types.GET_TASK, getTask);
   yield takeEvery(types.POST_TASK, postTask);
   yield takeEvery(types.DELETE_TASK, deleteTask);
   yield takeEvery(types.PUT_TASK, putTask);
+  yield takeEvery(types.POST_IMAGE_TASK, postImageTask);
+  yield takeEvery(types.PUT_IMAGE_TASK, putImageTask);
 }

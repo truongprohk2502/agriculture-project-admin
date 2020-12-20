@@ -161,3 +161,57 @@ export const putLockProjectFail = (error) => {
     },
   };
 };
+
+export const postImageProject = (data) => {
+  return {
+    type: types.POST_IMAGE_PROJECT,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const postImageProjectSuccess = (data) => {
+  return {
+    type: types.POST_IMAGE_PROJECT_SUCCESS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const postImageProjectFail = (error) => {
+  return {
+    type: types.POST_IMAGE_PROJECT_FAIL,
+    payload: {
+      error,
+    },
+  };
+};
+
+export const putImageProject = (data) => {
+  return {
+    type: types.PUT_IMAGE_PROJECT,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const putImageProjectSuccess = (data) => {
+  return {
+    type: types.PUT_IMAGE_PROJECT_SUCCESS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const putImageProjectFail = (error) => {
+  return {
+    type: types.PUT_IMAGE_PROJECT_FAIL,
+    payload: {
+      error,
+    },
+  };
+};

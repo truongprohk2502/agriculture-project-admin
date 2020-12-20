@@ -107,3 +107,57 @@ export const putTaskFail = (error) => {
     },
   };
 };
+
+export const postImageTask = (data) => {
+  return {
+    type: types.POST_IMAGE_TASK,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const postImageTaskSuccess = (data) => {
+  return {
+    type: types.POST_IMAGE_TASK_SUCCESS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const postImageTaskFail = (error) => {
+  return {
+    type: types.POST_IMAGE_TASK_FAIL,
+    payload: {
+      error,
+    },
+  };
+};
+
+export const putImageTask = (data) => {
+  return {
+    type: types.PUT_IMAGE_TASK,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const putImageTaskSuccess = (data) => {
+  return {
+    type: types.PUT_IMAGE_TASK_SUCCESS,
+    payload: {
+      data,
+    },
+  };
+};
+
+export const putImageTaskFail = (error) => {
+  return {
+    type: types.PUT_IMAGE_TASK_FAIL,
+    payload: {
+      error,
+    },
+  };
+};

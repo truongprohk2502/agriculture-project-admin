@@ -6,6 +6,8 @@ export const API_GET_ACTUAL_PROJECT = "/project/listByUserId";
 export const API_POST_SAMPLE_PROJECT = "/project/createSampleProject";
 export const API_PUT_SAMPLE_PROJECT = "/project/update";
 export const API_DELETE_SAMPLE_PROJECT = "/project/delete";
+export const API_POST_IMAGE_PROJECT = "/project/uploadImages";
+export const API_PUT_IMAGE_PROJECT = "/project/removeImage";
 
 export const API_GET_PHASE = "/phase/list";
 export const API_POST_PHASE = "/phase/create";
@@ -16,6 +18,8 @@ export const API_GET_TASK = "/task/list";
 export const API_POST_TASK = "/task/create";
 export const API_PUT_TASK = "/task/update";
 export const API_DELETE_TASK = "/task/delete";
+export const API_POST_IMAGE_TASK = "/task/uploadImages";
+export const API_PUT_IMAGE_TASK = "/task/removeImage";
 
 export const API_GET_MATERIAL = "/material/list";
 export const API_POST_MATERIAL = "/material/create";

@@ -10,6 +10,7 @@ import {
   Select,
   Table,
   Tag,
+  Modal,
   notification,
 } from "antd";
 import { connect } from "react-redux";
@@ -20,6 +21,8 @@ import {
   deleteSampleProject,
   putSampleProject,
   putLockProject,
+  postImageProject,
+  putImageProject,
 } from "../../../actions/project";
 import { Link } from "react-router-dom";
 
@@ -43,6 +46,9 @@ class ManageProject extends Component {
       editId: "",
       standardGap: [],
       newGap: "",
+      imageModelVisible: false,
+      projectId: "",
+      images: [],
     };
   }
 
@@ -95,8 +101,8 @@ class ManageProject extends Component {
       },
       {
         title: "Hình ảnh",
-        render: ({ images }) => (
-          <a href="" onClick={() => this.showImages(images)}>
+        render: ({ images, _id }) => (
+          <a href="" onClick={(e) => this.showImages(e, images, _id)}>
             Hình ảnh
           </a>
         ),
@@ -149,8 +155,32 @@ class ManageProject extends Component {
                 </Popconfirm>
               ),
             },
+            {
+              title: "Hành động",
+              render: ({ _id, isActive }) => (
+                <Popconfirm
+                  title="Bạn có chắc chắn？"
+                  okText="Có"
+                  cancelText="Không"
+                  onConfirm={() => this.lockProject(_id, !isActive)}
+                >
+                  <a href="">{isActive ? "Khóa" : "Mở"}</a>
+                </Popconfirm>
+              ),
+            },
           ],
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.listSampleProject !== this.props.listSampleProject) {
+      const project = nextProps.listSampleProject.find(
+        (prj) => prj._id === this.state.projectId
+      );
+      if (project) {
+        this.setState({ images: project.images });
+      }
+    }
   }
 
   lockProject = (_id, isActive) => {
@@ -173,8 +203,9 @@ class ManageProject extends Component {
     });
   };
 
-  showImages = (images) => {
-    console.log(images);
+  showImages = (e, images, id) => {
+    e.preventDefault();
+    this.setState({ imageModelVisible: true, images, projectId: id });
   };
 
   editProject = (id) => {
@@ -306,6 +337,20 @@ class ManageProject extends Component {
     this.openNotificationWithIcon("success");
   };
 
+  deleteImage = (imgRemove) => {
+    this.props.putImageProject({
+      images: this.state.images.filter((img) => img !== imgRemove),
+      projectId: this.state.projectId,
+    });
+  };
+
+  uploadImage = (e) => {
+    this.props.postImageProject({
+      file: e.target.files[0],
+      projectId: this.state.projectId,
+    });
+  };
+
   render() {
     const {
       name,
@@ -322,6 +367,7 @@ class ManageProject extends Component {
       columnData,
       showDrawer,
       screenType,
+      imageModelVisible,
     } = this.state;
     return (
       <div>
@@ -543,6 +589,42 @@ class ManageProject extends Component {
             </Button>
           </Form>
         </Drawer>
+        <Modal
+          title="Hình ảnh dự án"
+          centered
+          visible={imageModelVisible}
+          onCancel={() => this.setState({ imageModelVisible: false })}
+          footer={
+            screenType === "SAMPLE" ? (
+              <input type="file" onChange={this.uploadImage} />
+            ) : null
+          }
+          width={1000}
+        >
+          <div style={{ display: "flex" }}>
+            {this.state.images.map((img, index) => (
+              <div
+                style={{ marginLeft: 10, marginRight: 10, textAlign: "center" }}
+              >
+                <div>
+                  <img key={index} src={img} width={200} alt="img" />
+                </div>
+                {screenType === "SAMPLE" && (
+                  <Popconfirm
+                    title="Bạn có chắc chắn muốn xóa？"
+                    okText="Có"
+                    cancelText="Không"
+                    onConfirm={() => this.deleteImage(img)}
+                  >
+                    <Button type="primary" danger style={{ marginTop: 10 }}>
+                      Xóa
+                    </Button>
+                  </Popconfirm>
+                )}
+              </div>
+            ))}
+          </div>
+        </Modal>
       </div>
     );
   }
@@ -555,6 +637,8 @@ const mapDispatchToProps = (dispatch) => ({
   deleteSampleProject: (data) => dispatch(deleteSampleProject(data)),
   putSampleProject: (data) => dispatch(putSampleProject(data)),
   putLockProject: (data) => dispatch(putLockProject(data)),
+  postImageProject: (data) => dispatch(postImageProject(data)),
+  putImageProject: (data) => dispatch(putImageProject(data)),
 });
 
 const mapStateToProps = (state) => ({

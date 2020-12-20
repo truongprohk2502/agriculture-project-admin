@@ -1,3 +1,4 @@
+import { put } from "redux-saga/effects";
 import * as types from "../constants/ActionTypes";
 
 var initialState = {
@@ -89,6 +90,38 @@ const project = (state = initialState, action) => {
         error: null,
       };
     case types.DELETE_SAMPLE_PROJECT_FAIL:
+      return { ...state, error: action.payload.error };
+    case types.POST_IMAGE_PROJECT:
+      return state;
+    case types.POST_IMAGE_PROJECT_SUCCESS:
+      const post_image_data = action.payload.data;
+      return {
+        ...state,
+        listSampleProject: state.listSampleProject.map((project) => {
+          if (project._id === post_image_data.projectId) {
+            project.images = post_image_data.images;
+          }
+          return project;
+        }),
+        error: null,
+      };
+    case types.POST_IMAGE_PROJECT_FAIL:
+      return { ...state, error: action.payload.error };
+    case types.PUT_IMAGE_PROJECT:
+      return state;
+    case types.PUT_IMAGE_PROJECT_SUCCESS:
+      const put_image_data = action.payload.data;
+      return {
+        ...state,
+        listSampleProject: state.listSampleProject.map((project) => {
+          if (project._id === put_image_data.projectId) {
+            project.images = put_image_data.images;
+          }
+          return project;
+        }),
+        error: null,
+      };
+    case types.PUT_IMAGE_PROJECT_FAIL:
       return { ...state, error: action.payload.error };
     default:
       return state;

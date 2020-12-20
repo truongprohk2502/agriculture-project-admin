@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { deleteTask, getTask, postTask, putTask } from "../../../actions/task";
+import {
+  deleteTask,
+  getTask,
+  postTask,
+  putTask,
+  postImageTask,
+  putImageTask,
+} from "../../../actions/task";
 import { connect } from "react-redux";
 import {
   Popconfirm,
@@ -12,6 +19,7 @@ import {
   Checkbox,
   Select,
   Form,
+  Modal,
   notification,
 } from "antd";
 import { Link } from "react-router-dom";
@@ -32,6 +40,9 @@ class ManageTaskScreen extends Component {
       isDailyTask: false,
       editId: "",
       editable: true,
+      imageModelVisible: false,
+      taskId: "",
+      images: [],
     };
   }
 
@@ -74,6 +85,14 @@ class ManageTaskScreen extends Component {
         render: ({ isDailyTask }) => (isDailyTask ? "Có" : "Không"),
       },
       {
+        title: "Hình ảnh",
+        render: ({ images, _id }) => (
+          <a href="" onClick={(e) => this.showImages(e, images, _id)}>
+            Hình ảnh
+          </a>
+        ),
+      },
+      {
         title: "Vật liệu",
         render: ({ _id }) => (
           <Link to={"/material/" + _id + "/" + editable}>Vật liệu</Link>
@@ -111,6 +130,17 @@ class ManageTaskScreen extends Component {
     this.setState({
       columnData,
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.listTask !== this.props.listTask) {
+      const task = nextProps.listTask.find(
+        (tsk) => tsk._id === this.state.taskId
+      );
+      if (task) {
+        this.setState({ images: task.images });
+      }
+    }
   }
 
   openNotificationWithIcon = (type) => {
@@ -167,6 +197,25 @@ class ManageTaskScreen extends Component {
 
   deleteTask = (id) => {
     this.props.deleteTask({ id });
+  };
+
+  deleteImage = (imgRemove) => {
+    this.props.putImageTask({
+      images: this.state.images.filter((img) => img !== imgRemove),
+      taskId: this.state.taskId,
+    });
+  };
+
+  uploadImage = (e) => {
+    this.props.postImageTask({
+      file: e.target.files[0],
+      taskId: this.state.taskId,
+    });
+  };
+
+  showImages = (e, images, id) => {
+    e.preventDefault();
+    this.setState({ imageModelVisible: true, images, taskId: id });
   };
 
   handleChangeText = (e) => {
@@ -243,6 +292,7 @@ class ManageTaskScreen extends Component {
       workerUnitFee,
       isDailyTask,
       editable,
+      imageModelVisible,
     } = this.state;
     return (
       <div>
@@ -391,6 +441,40 @@ class ManageTaskScreen extends Component {
             </Button>
           </Form>
         </Drawer>
+        <Modal
+          title="Hình ảnh dự án"
+          centered
+          visible={imageModelVisible}
+          onCancel={() => this.setState({ imageModelVisible: false })}
+          footer={
+            editable ? <input type="file" onChange={this.uploadImage} /> : null
+          }
+          width={1000}
+        >
+          <div style={{ display: "flex" }}>
+            {this.state.images.map((img, index) => (
+              <div
+                style={{ marginLeft: 10, marginRight: 10, textAlign: "center" }}
+              >
+                <div>
+                  <img key={index} src={img} width={200} alt="img" />
+                </div>
+                {editable && (
+                  <Popconfirm
+                    title="Bạn có chắc chắn muốn xóa？"
+                    okText="Có"
+                    cancelText="Không"
+                    onConfirm={() => this.deleteImage(img)}
+                  >
+                    <Button type="primary" danger style={{ marginTop: 10 }}>
+                      Xóa
+                    </Button>
+                  </Popconfirm>
+                )}
+              </div>
+            ))}
+          </div>
+        </Modal>
       </div>
     );
   }
@@ -401,6 +485,8 @@ const mapDispatchToProps = (dispatch) => ({
   postTask: (data) => dispatch(postTask(data)),
   deleteTask: (data) => dispatch(deleteTask(data)),
   putTask: (data) => dispatch(putTask(data)),
+  postImageTask: (data) => dispatch(postImageTask(data)),
+  putImageTask: (data) => dispatch(putImageTask(data)),
 });
 
 const mapStateToProps = (state) => ({

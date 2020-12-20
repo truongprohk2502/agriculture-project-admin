@@ -33,11 +33,15 @@ class ManageUser extends Component {
           dataIndex: "address",
         },
         {
+          title: "Số điện thoại",
+          dataIndex: "phone",
+        },
+        {
           title: "Giới tính",
           render: ({ gender }) => (gender ? "Nam" : "Nữ"),
         },
         {
-          title: "Dự án",
+          title: "Quản lý dự án",
           render: ({ _id }) => <Link to={"/project/" + _id}>Xem dự án</Link>,
         },
         {

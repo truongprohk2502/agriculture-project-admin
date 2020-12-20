@@ -41,7 +41,7 @@ const phase = (state = initialState, action) => {
           task.estimatedTimeUnit = editedTask.estimatedTimeUnit;
           task.workerNum = editedTask.workerNum;
           task.workerUnitFee = editedTask.workerUnitFee;
-          return task
+          return task;
         }),
         error: null,
       };
@@ -58,6 +58,38 @@ const phase = (state = initialState, action) => {
         error: null,
       };
     case types.DELETE_TASK_FAIL:
+      return { ...state, error: action.payload.error };
+    case types.POST_IMAGE_TASK:
+      return state;
+    case types.POST_IMAGE_TASK_SUCCESS:
+      const post_image_task_data = action.payload.data;
+      return {
+        ...state,
+        listTask: state.listTask.map((task) => {
+          if (task._id === post_image_task_data.taskId) {
+            task.images = post_image_task_data.images;
+          }
+          return task;
+        }),
+        error: null,
+      };
+    case types.POST_IMAGE_TASK_FAIL:
+      return { ...state, error: action.payload.error };
+    case types.PUT_IMAGE_TASK:
+      return state;
+    case types.PUT_IMAGE_TASK_SUCCESS:
+      const put_image_task_data = action.payload.data;
+      return {
+        ...state,
+        listTask: state.listTask.map((task) => {
+          if (task._id === put_image_task_data.taskId) {
+            task.images = put_image_task_data.images;
+          }
+          return task;
+        }),
+        error: null,
+      };
+    case types.PUT_IMAGE_TASK_FAIL:
       return { ...state, error: action.payload.error };
     default:
       return state;
